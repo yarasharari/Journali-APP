@@ -6,34 +6,42 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
     @State var showingSheet = false
+    @State private var Journals = Journal.journals
+    @Query var DataJournal :[Journal]
+    
+    
     var body: some View {
         ZStack{
             Color.black.ignoresSafeArea()
-        
-        ScrollView{
-         
+            
+            ScrollView{
+                
                 
                 VStack(spacing:30){
                     Spacer()
                     HStack{
                         Text("Journal")
                             .font(.system(size: 34))
+                            .fontWeight(.bold)
                             .multilineTextAlignment(.leading)
                         
                         Spacer()
                         
                         
                         Menu{
-                            Button("Book Mark",action: {})
+                            Button("Bookmark",action: {})
                             Button("Journal Date",action: {})
                         }
                         label: {
                             Image(systemName: "line.3.horizontal.decrease").resizable().frame(width: 19,height:17 ).foregroundColor(Color(.pur))
-                        }.frame(width: 30, height: 30)
-                            .background(Circle()).foregroundColor(Color(.gry)).padding()
+                        }
+                        .frame(width: 30, height: 30)
+                        .background(Circle())
+                        .foregroundColor(Color(.gry)).padding()
                         
                         
                         Button(action:{
@@ -49,9 +57,20 @@ struct ContentView: View {
                         
                     }
                     .padding(20)
+              
+                }
+                .sheet(isPresented: $showingSheet){
+                    newJournalSheet()
+                    
+                    
+                }
+                ForEach(DataJournal){ jour in JournalRows(jour: jour)}
+            }.overlay {
+                ContentUnavailableView (label:{
                     
                     VStack(){
-                        Spacer()
+                        
+                        
                         Image("pic1")
                         Text("Begin your Journal").fontWeight(.bold)
                             .foregroundColor(Color(.pur))
@@ -59,17 +78,18 @@ struct ContentView: View {
                         
                         Text("Craft your personal diary, tap the plus icon to begin")
                             .multilineTextAlignment(.center).font(.system(size: 18))
-                    }.padding(60)
+                        
+                    }.padding(30)
                     
-                    
-                    
+                   
                 }
-                .sheet(isPresented: $showingSheet){
-                    Text("sheet")
-                }
+                                        
+                )
             }
-        }
-    }}
+        }} }
+  
+
+
 
 #Preview {
     ContentView()
