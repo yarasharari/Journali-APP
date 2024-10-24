@@ -10,7 +10,6 @@ import SwiftData
 
 struct ContentView: View {
     @State var showingSheet = false
-    @State private var Journals = Journal.journals
     @Query var DataJournal :[Journal]
     
     
@@ -57,16 +56,15 @@ struct ContentView: View {
                         
                     }
                     .padding(20)
-              
+                    
                 }
                 .sheet(isPresented: $showingSheet){
                     newJournalSheet()
                     
                     
                 }
-                ForEach(DataJournal){ jour in JournalRows(jour: jour)}
-            }.overlay {
-                ContentUnavailableView (label:{
+                
+                if DataJournal.isEmpty{
                     
                     VStack(){
                         
@@ -79,15 +77,19 @@ struct ContentView: View {
                         Text("Craft your personal diary, tap the plus icon to begin")
                             .multilineTextAlignment(.center).font(.system(size: 18))
                         
-                    }.padding(30)
+                    }.padding(60)
                     
-                   
-                }
-                                        
-                )
-            }
-        }} }
-  
+                    
+                }else {
+                    VStack{
+                        ForEach(DataJournal){ jour in JournalRows(jour: jour)}
+                        
+                    }}
+                
+                
+            }}
+    }
+}
 
 
 

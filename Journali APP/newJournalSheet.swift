@@ -17,8 +17,8 @@ extension View{
 import SwiftUI
 
 struct newJournalSheet : View {
-    @State  private var title = ""
-    @State  private var journaly = ""
+    @State   var title = ""
+    @State   var journaly = ""
     @FocusState  var isfocuse : Bool
     @Environment(\.dismiss)  var dismiss
     @Environment(\.modelContext) var context
@@ -51,7 +51,7 @@ struct newJournalSheet : View {
                 ToolbarItem(placement:.confirmationAction){
                     Button("Save"){
                         
-                        if (!title.isEmpty && !journaly.isEmpty){
+                        if (!(title.isEmpty) && !(journaly.isEmpty)){
                             context.insert(Journal(title:  title,journaly: journaly))
                             dismiss()
                             
