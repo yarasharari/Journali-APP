@@ -46,13 +46,15 @@ struct newJournalSheet : View {
                     Button("Cancle"){
                         dismiss()
                         
-                    }.foregroundColor(Color.pur).font(.system(size: 16))}
+                    }.foregroundColor(Color.pur2).font(.system(size: 16))}
                 
                 ToolbarItem(placement:.confirmationAction){
                     Button("Save"){
                         
                         if (!(title.isEmpty) && !(journaly.isEmpty)){
                             context.insert(Journal(title:  title,journaly: journaly))
+                            try?
+                            context.save()
                             dismiss()
                             
                         }
@@ -60,7 +62,7 @@ struct newJournalSheet : View {
                         
                        
                    
-                }.foregroundColor(Color("pur")).foregroundColor(Color.pur).padding().font(.system(size: 16)).fontWeight(.bold)}
+                    }.foregroundColor(Color.pur2).padding().font(.system(size: 16)).fontWeight(.bold)}
                 
             }
             
