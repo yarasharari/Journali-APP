@@ -12,8 +12,8 @@ struct ContentView: View {
     @State var showingSheet = false
     @Query var DataJournal :[Journal]
     @Environment(\.modelContext) var context
-    
-    
+    @State private var searchText = ""
+    @State private var selectedjour : Journal = Journal(title: "", journaly: "")
     
     
     var body: some View {
@@ -62,7 +62,7 @@ struct ContentView: View {
                                 .swipeActions(edge:.trailing, allowsFullSwipe: false) {
                                     Button(role: .destructive) {
                                         context.delete(jour)
-                                      
+                                        
                                         
                                     }
                                     label: {
@@ -70,16 +70,20 @@ struct ContentView: View {
                                     }
                                 }
                                 .tint(.red)}
-                                .swipeActions(edge: .leading,allowsFullSwipe: false) {
-                                    Button {
-                                        
-                                    }
-                                    label: {
-                                        Label(" ", systemImage: "pencil")
-                                    }
-                                }.tint(.darkpur)
-                            
-                        }.listRowSpacing(15)}}.navigationTitle("Journaly")
+                            .swipeActions(edge: .leading,allowsFullSwipe: false) {
+                                Button {
+                                    showingSheet=true
+                                }
+                                label: {
+                                    Label(" ", systemImage: "pencil")
+                                }
+                            }.tint(.darkpur)
+                                
+                                
+                        }.listRowSpacing(15).searchable(text: $searchText)
+                    }
+                }.navigationTitle("Journaly")
+ 
                     .toolbar{
                         ToolbarItem(placement:.confirmationAction){
                             
@@ -109,8 +113,9 @@ struct ContentView: View {
                             
                             
                                 .sheet(isPresented: $showingSheet){
-                                    newJournalSheet()
-                                    
+                                    newJournalSheet(jour: selectedjour).presentationDetents(
+                                        [.fraction(0.7)]
+                                    )
                                     
                                 }
                             
@@ -124,6 +129,7 @@ struct ContentView: View {
             
         }
     }
+   
     
 }
 
