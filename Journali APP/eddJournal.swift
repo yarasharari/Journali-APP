@@ -1,35 +1,32 @@
 //
-//  newJournalSheet.swift
+//  eddJournal.swift
 //  Journali APP
 //
-//  Created by Yara Alsharari on 20/04/1446 AH.
+//  Created by Yara Alsharari on 24/04/1446 AH.
 //
 
 import SwiftUI
 
-struct newJournalSheet : View {
-   
-    
+struct eddJournal : View {
+    @State  private var title = ""
+    @State  private var journaly = ""
     @Environment(\.dismiss)  var dismiss
     @Environment(\.modelContext) var context
-    @Bindable var jour : Journal
+    @State private var isbookmark = false
     var body: some View {
         NavigationView{
             VStack(alignment: .leading, spacing: 10){
                 
-                TextField("Title",text: $jour.title,axis: .vertical).font(.system(size: 34)).fontWeight(.bold).padding()
+                TextField("Title",text: $title).font(.system(size: 34)).fontWeight(.bold).padding()
                 
-               Text("").font(.system(size: 16)).padding().foregroundColor(Color.lgry)
+               Text(Date.now.formatted(date: .numeric, time: .omitted)).font(.system(size: 16)).padding().foregroundColor(Color.lgry)
                 
                 ZStack(alignment: .topLeading){
                     
-                    TextField("Type your journal...",text: $jour.journaly,axis: .vertical).padding()
-                   
+                    TextField("Type your journal...",text: $journaly,axis: .vertical).padding()
                 }
-                
+               
                 Spacer()
-                
-                
                 
             }.toolbar{
                 ToolbarItem(placement:.cancellationAction){
@@ -38,14 +35,15 @@ struct newJournalSheet : View {
                     Button("Cancle"){
                         dismiss()
                         
-                    }.foregroundColor(Color.pur2).font(.system(size: 16))}
+                    }.foregroundColor(Color.darkpur).font(.system(size: 16))}
                 
                 ToolbarItem(placement:.confirmationAction){
                     Button("Save"){
                         
-                        if (!$jour.title.wrappedValue.isEmpty && !$jour.journaly.wrappedValue.isEmpty){
-                            context.insert(jour)
-                            try?
+                        if (!title.isEmpty && !journaly.isEmpty){
+                            context.insert(Journal(title:  title,createdDate: Date(),journaly: journaly,isbookmark: false))
+                            try!
+                           
                             context.save()
                             dismiss()
                             
@@ -54,7 +52,7 @@ struct newJournalSheet : View {
                         
                        
                    
-                    }.foregroundColor(Color.pur2).padding().font(.system(size: 16)).fontWeight(.bold)}
+                    }.foregroundColor(Color.darkpur).padding().font(.system(size: 16)).fontWeight(.bold)}
                 
             }
             
@@ -62,12 +60,5 @@ struct newJournalSheet : View {
         }
                         
                     }
-        }
-    
-                    
-                
-
-
-#Preview {
-    newJournalSheet(jour:Journal(title: "",createdDate: Date(), journaly: "",isbookmark: false))
 }
+    

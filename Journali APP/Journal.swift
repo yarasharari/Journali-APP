@@ -12,22 +12,24 @@ import SwiftData
 final class Journal : Identifiable{
     var id = UUID()
     var title : String
+    var createdDate : Date
     var journaly : String
+    var isbookmark : Bool = false
     
-    
-    init(id: UUID = UUID(), title: String,journaly: String) {
+    init(id: UUID = UUID(), title: String,createdDate:Date,journaly: String,isbookmark:Bool) {
         self.id = id
         self.title = title
+        self.createdDate = createdDate
         self.journaly = journaly
-        
+        self.isbookmark = isbookmark
     }
 }
 
 extension Journal {
     static var EmptyList : [Journal ] {[]}
     static var journals : [Journal] {
-        [ Journal(title: "journal",journaly: "discription")
-        , Journal(title: "journal",journaly: "discription")]
+        [ Journal(title: "journal",createdDate: Date(),journaly: "discription",isbookmark: false)
+        , Journal(title: "journal",createdDate: Date(),journaly: "discription",isbookmark: false)]
     }
 }
  

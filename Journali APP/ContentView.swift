@@ -13,9 +13,29 @@ struct ContentView: View {
     @Query var DataJournal :[Journal]
     @Environment(\.modelContext) var context
     @State private var searchText = ""
-    @State private var selectedjour : Journal = Journal(title: "", journaly: "")
+    @State private var selectedjour : Journal?
+    @State var showingupdateSheet = false
+    @State var  selectedFilter : String = "ALL"
     
+   
+
     
+    var filterdJournal : [Journal] {
+        let filterd = DataJournal.filter{
+            searchText.isEmpty || $0.title.lowercased().contains(searchText.lowercased()) || $0.journaly.lowercased().contains(searchText.lowercased())
+        }
+        switch selectedFilter {
+        case "Bookmark":
+            return filterd.filter{$0.isbookmark}
+        case "Journal Date":
+            return filterd.sorted{ $0.createdDate > $1.createdDate }
+        default:
+            return filterd
+            
+        }
+        
+    }
+     
     var body: some View {
         NavigationView{
             ZStack{
@@ -42,16 +62,26 @@ struct ContentView: View {
                         
                     }
                     else {
-                        
+                         
                         List{
-                            ForEach(DataJournal, id: \.self){ jour in
+                            ForEach(filterdJournal, id: \.self){ jour in
                                 VStack(alignment: .leading){
                                     
                                     HStack{
                                         
                                         Text(jour.title).font(.system(size: 24)).fontWeight(.bold).foregroundColor(Color.pur)
                                         Spacer()
-                                        Image(systemName: "bookmark").foregroundColor(Color.pur)
+                                        
+                                        Button(action:{
+                                            if let index = DataJournal.firstIndex(where: {$0.id == jour.id}) {
+                                                DataJournal[index].isbookmark.toggle()}
+                                            
+                                                   
+                                               })
+                                        {
+                                            Image(systemName:jour.isbookmark ? "bookmark.fill" : "bookmark").foregroundColor(Color.pur).font(.system(size: 24))
+                                        }
+                                    
                                     }.padding()
                                     
                                     Text(Date.now.formatted(date: .numeric, time: .omitted)).font(.system(size: 16)).padding( .bottom, 10.0).foregroundColor(Color.lgry).padding(.leading)
@@ -59,6 +89,19 @@ struct ContentView: View {
                                     Text(jour.journaly).font(.system(size: 20)).padding().foregroundColor(Color.white)
                                     
                                 }
+                               
+                                    
+                                .swipeActions(edge: .leading,allowsFullSwipe: false) {
+                                    Button {
+                                        selectedjour = jour
+                                       // showingSheet=true
+                                       
+                                    }
+                                    label: {
+                                        Label(" ", systemImage: "pencil")
+                                    }
+                                }.tint(.darkpur)
+                                    
                                 .swipeActions(edge:.trailing, allowsFullSwipe: false) {
                                     Button(role: .destructive) {
                                         context.delete(jour)
@@ -70,27 +113,19 @@ struct ContentView: View {
                                     }
                                 }
                                 .tint(.red)}
-                            .swipeActions(edge: .leading,allowsFullSwipe: false) {
-                                Button {
-                                    showingSheet=true
-                                }
-                                label: {
-                                    Label(" ", systemImage: "pencil")
-                                }
-                            }.tint(.darkpur)
+ 
                                 
-                                
-                        }.listRowSpacing(15).searchable(text: $searchText)
+                        }.listRowSpacing(15).searchable(text: $searchText).accentColor(.pur2)
                     }
-                }.navigationTitle("Journaly")
+                }.navigationTitle("Journal")
  
                     .toolbar{
                         ToolbarItem(placement:.confirmationAction){
-                            
-                            
+                           
                             Menu{
-                                Button("Bookmark",action: {})
-                                Button("Journal Date",action: {})
+                                Button("All entries") { selectedFilter = "all"}
+                                Button("Bookmark") { selectedFilter = "Bookmark"}
+                                Button("Journal Date") { selectedFilter = "Journal Date"}
                             }
                             label: {
                                 Image(systemName: "line.3.horizontal.decrease").resizable().frame(width: 19,height:17 ).foregroundColor(Color(.pur))
@@ -113,11 +148,14 @@ struct ContentView: View {
                             
                             
                                 .sheet(isPresented: $showingSheet){
-                                    newJournalSheet(jour: selectedjour).presentationDetents(
-                                        [.fraction(0.7)]
-                                    )
+                                    eddJournal()
+                                    
                                     
                                 }
+                                .sheet(item: $selectedjour) { jur in
+                                    newJournalSheet(jour: jur)
+                                }
+                            
                             
                         }
                         
