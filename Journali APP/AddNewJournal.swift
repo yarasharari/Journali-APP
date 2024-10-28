@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct eddJournal : View {
+struct AddNewJournal : View {
     @State  private var title = ""
     @State  private var journaly = ""
     @Environment(\.dismiss)  var dismiss
@@ -62,3 +62,4 @@ struct eddJournal : View {
                     }
 }
     
+

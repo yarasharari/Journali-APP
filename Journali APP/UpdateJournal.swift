@@ -1,3 +1,4 @@
+
 //
 //  newJournalSheet.swift
 //  Journali APP
@@ -7,7 +8,7 @@
 
 import SwiftUI
 
-struct newJournalSheet : View {
+struct UpdateJournal : View {
    
     
     @Environment(\.dismiss)  var dismiss
@@ -19,7 +20,7 @@ struct newJournalSheet : View {
                 
                 TextField("Title",text: $jour.title,axis: .vertical).font(.system(size: 34)).fontWeight(.bold).padding()
                 
-               Text("").font(.system(size: 16)).padding().foregroundColor(Color.lgry)
+                Text(Date.now.formatted(date: .numeric, time: .omitted)).font(.system(size: 16)).padding().foregroundColor(Color.lgry)
                 
                 ZStack(alignment: .topLeading){
                     
@@ -69,5 +70,5 @@ struct newJournalSheet : View {
 
 
 #Preview {
-    newJournalSheet(jour:Journal(title: "",createdDate: Date(), journaly: "",isbookmark: false))
+    UpdateJournal(jour:Journal(title: "",createdDate: Date(), journaly: "",isbookmark: false))
 }

@@ -148,12 +148,12 @@ struct ContentView: View {
                             
                             
                                 .sheet(isPresented: $showingSheet){
-                                    eddJournal()
+                                    AddNewJournal()
                                     
                                     
                                 }
                                 .sheet(item: $selectedjour) { jur in
-                                    newJournalSheet(jour: jur)
+                                    UpdateJournal(jour: jur)
                                 }
                             
                             
